@@ -1,4 +1,8 @@
-//https://www.geeksforgeeks.org/greedy-algorithms-set-7-dijkstras-algorithm-for-adjacency-list-representation/
+//Program Created by Jermaine Lara
+//6/8/18
+//Program creates a graph by entering a vertexes and creating edges between those vertices
+//Implements Djikstra's algorithm to find the shortest path between two vertices 
+//Based off the c++ program of Djisksta algorithm from: https://www.geeksforgeeks.org/greedy-algorithms-set-7-dijkstras-algorithm-for-adjacency-list-representation/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -46,29 +50,77 @@ void decreaseKey(MinHeap* minHeap, int vertex, int dist);
 bool isInMinHeap(MinHeap * minHeap, int vertex);
 void printList(int distance[], int n);
 void dijkstra(Graph* graph, int source);
+void removeVertex();
+void removeEdge();
 
 int main() {
-  // create the graph given in above fugure
-    int vertexCount = 9;
-    Graph* graph = createGraph(vertexCount);
-    addEdge(graph, 0, 1, 4);
-    addEdge(graph, 0, 7, 8);
-    addEdge(graph, 1, 2, 8);
-    addEdge(graph, 1, 7, 11);
-    addEdge(graph, 2, 3, 7);
-    addEdge(graph, 2, 8, 2);
-    addEdge(graph, 2, 5, 4);
-    addEdge(graph, 3, 4, 9);
-    addEdge(graph, 3, 5, 14);
-    addEdge(graph, 4, 5, 10);
-    addEdge(graph, 5, 6, 2);
-    addEdge(graph, 6, 7, 1);
-    addEdge(graph, 6, 8, 6);
-    addEdge(graph, 7, 8, 7);
-	cout << "before djikstras" << endl;
-    dijkstra(graph, 0);
- 
-    return 0;	
+	/*
+	int choice;
+	do {
+	cout << "Enter option: " << endl;
+	cout << "1 to add a vertex" << endl;
+	cout << "2 to add an edge" << endl;
+	cout << "3 to remove a vertex from the graph" << endl;
+	cout << "4 to remove and edge from the graph" << endl;
+	cout << "5 to print out the graph" << endl;
+	cout << "6 to search for the shortest path between two vertices" << endl;
+	cout << "7 to exit" << endl;
+	cin >> choice;
+	
+	if(choice == 1) {
+		cout << "Enter Vertex Label" << endl;
+		int label
+		cin >> label
+		createGraph(label);
+	}
+
+	if(choice == 2) {
+		cout << "Enter the first vertex you want the edge to be between" << endl;
+		int vertexOne;
+		cin >> vertexOne;
+		cout << "Enter the second vertex you want the edge to be between" << endl;
+		int vertexTwo;
+		cin >> vertexTwo;
+		cout << "Enter the weight you want the edge to have" << endl;
+		int edgeWeight;
+		cin >> edgeWeight;
+		addEdge(vertexOne, vertexTwo, edgeWeight);
+	}
+	
+	if(choice == 3) {
+		cout << "Enter the label of the vertex you want to remove" << endl;
+		int removedVertexLabel;
+		cin >> removedVertexLabel;
+		//Remove vertex function still needed
+	}
+	
+	if(choice == 4) {
+		cout << "Enter the first vertex label you want to remove"
+		int firstVertexRemoved;
+		cin >> firstVertexRemoved;
+		cout << "Enter the second vertex label you want to remove" << endl;
+		int secondVertexRemoved;
+		cin >> secondVertexRemoved;
+		//Remove edge function still needed
+	}
+	
+	if(choice == 5) {
+		cout << "Enter the vertex label to start at" << endl;
+		int start;
+		cin >> start;
+		cout << "Enter the vertex label to end at" << endl;
+		int end;
+		cin >> end;
+		dijikstra(start, end);
+	}
+	
+	//Prints graph in the form of an adjacency list
+	if(choice == 6) {
+		//printList();
+	}
+	
+	while(choice != 7);
+	*/
 }
 
 Node* newAdjacencyNode(int destination, int weight) {
@@ -257,5 +309,9 @@ void dijkstra(Graph* graph, int source) {
     // print the calculated shortest distances
     printList(distance, vertexCount);
 }
-	
-		
+
+void removeVertex() {
+}
+
+void removeEdge(){
+}	

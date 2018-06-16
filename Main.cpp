@@ -1,8 +1,10 @@
 //Program Created by Jermaine Lara
-//6/10/18
+//Fixed:
+//6/16/18
 //Program creates a graph by entering a vertexes and creating edges between those vertices
 //Implements Djikstra's algorithm to find the shortest path between two vertices 
 //Based off the c++ program of Djisksta algorithm from: https://www.geeksforgeeks.org/greedy-algorithms-set-7-dijkstras-algorithm-for-adjacency-list-representation/
+//Printing Shortest Path reference: https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -52,11 +54,12 @@ MinHeapNode* extractMin(MinHeap* minHeap);
 void decreaseKey(MinHeap* minHeap, int vertex, int dist);
 bool isInMinHeap(MinHeap * minHeap, int vertex);
 void printAdjacencyTable(Graph* graph);
-int* dijkstra(Graph* graph, int source);
+void printPath(Graph* graph, int parents[], int index);
+void dijkstra(Graph* graph, int source, int distances[], int parents[]);
 void removeVertex();
 void removeEdge();
 int getVertexIndex(string &label, Graph* graph);
-int getShortestDistance(Graph* graph, int vertexOneIndex, int vertexTwoIndex);
+void printShortestDistance(Graph* graph, int vertexOneIndex, int vertexTwoIndex);
 
 int main() {
 	int choice;
@@ -157,8 +160,7 @@ int main() {
 				cout << "Label not found" << endl;
 				continue;
 			}
-			int distance = getShortestDistance(graph, startVertexIndex, endVertexIndex);
-			cout << "The shortest distance: " << distance << endl;
+			printShortestDistance(graph, startVertexIndex, endVertexIndex);
 		}
 		
 		//Prints graph in the form of an adjacency table
@@ -359,25 +361,45 @@ void printAdjacencyTable(Graph* graph) {
 		if(graph->labels[i].empty()) {
 			continue;
 		}
-		int* distances = dijkstra(graph, i);
+		int distances[20];
+		int parents[20];
+		dijkstra(graph, i, distances, parents);
 		for (int j = 0; j < 20; ++j) {
 			if(distances[j] != INT_MAX) {
-				cout << graph->labels[i] << " -> " << graph->labels[j] << "  " << distances[j] << endl;
+				cout << graph->labels[i] << " -> " << graph->labels[j] << " distance: " << distances[j] << ", path: " << graph->labels[i] << " ";
+				printPath(graph, parents, j);
+				cout << endl;
 			}
 		}
 	}
 }
 
+void printPath(Graph* graph, int parents[], int index) {
+	if (parents[index] != INT_MAX) {
+		printPath(graph, parents, parents[index]);
+		cout << graph->labels[index] << " ";
+	}
+}
+
+//Prints the shortest path between two vertices
+void printShortestDistance(Graph* graph, int startVertexIndex, int endVertexIndex) {
+	int distances[20];
+	int parents[20];
+    dijkstra(graph, startVertexIndex, distances, parents);
+	cout << "The Shortest Distance is: " << distances[endVertexIndex] << ", Path: " << graph->labels[startVertexIndex] << " ";
+	printPath(graph, parents, endVertexIndex);
+	cout << endl;
+}
+
 // The main function that calulates distances of shortest paths from source to all
 // vertices
-int* dijkstra(Graph* graph, int source) {
-	int vertexCount = 20;
-	int* distances = new int[vertexCount];
+void dijkstra(Graph* graph, int source, int distances[], int parents[]) {
 	
-	MinHeap* minHeap = createMinHeap(vertexCount);
+	MinHeap* minHeap = createMinHeap(20);
 	
-	for(int vertex = 0; vertex < vertexCount; ++vertex ) {
+	for(int vertex = 0; vertex < 20; ++vertex ) {
 		distances[vertex] = INT_MAX;
+		parents[vertex] = INT_MAX;
 		minHeap->nodes[vertex] = createMinHeapNode(vertex, distances[vertex]);
 		minHeap->position[vertex] = vertex;
 	}
@@ -388,7 +410,7 @@ int* dijkstra(Graph* graph, int source) {
     decreaseKey(minHeap, source, distances[source]);
 	
 	// Initially size of min heap is equal to the vertex count
-    minHeap->size = vertexCount;
+    minHeap->size = 20;
 	while (!isEmpty(minHeap)) {
         // Extract the vertex with minimum distance value
         MinHeapNode* minHeapNode = extractMin(minHeap);
@@ -405,19 +427,13 @@ int* dijkstra(Graph* graph, int source) {
             if (isInMinHeap(minHeap, vertex) && distances[u] != INT_MAX && 
                 crawl->weight + distances[u] < distances[vertex]) {
                 distances[vertex] = distances[u] + crawl->weight;
+				parents[vertex] = u;
                 // update distance value in min heap also
                 decreaseKey(minHeap, vertex, distances[vertex]);
             }
             crawl = crawl->next;
         }
     }
-    return distances;
-}
-
-//Finds the shortest distance between two vertices
-int getShortestDistance(Graph* graph, int startVertexIndex, int endVertexIndex) {
-	int* distances = dijkstra(graph, startVertexIndex);
-	return distances[endVertexIndex];
 }
 	
 //Look up the index of a vertex given its label
@@ -429,8 +445,3 @@ int getVertexIndex(string &label, Graph* graph) {
 	}
 	return -1;
 }
-
-
-			
-	
-		
